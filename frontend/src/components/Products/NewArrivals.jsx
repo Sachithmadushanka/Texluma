@@ -105,6 +105,24 @@ const NewArrivals = () => {
     },  
   ]
 
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
+  }
+
+  const handleMouseMove = (e) => {
+    if(!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1;      
+    scrollRef.current.scrollLeft = scrollLeft - walk;
+  }
+
+    const handleMouseUpOrLeave = () => { 
+    
+    setIsDragging(false);}
+
   const scroll = (direction) =>{
     const scrollAmount = direction === 'left' ? -300 : 300;
     scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
@@ -140,7 +158,7 @@ const NewArrivals = () => {
     }
   }, []);
   return(
-    <section>
+    <section className='py-16 px-4 lg:px-0 '>
         <div className='container mx-auto text-center mb-10 relative'>
             <h2 className="text-3xl font-bold mb-4 ">
                 Explore New Arrivals
@@ -166,7 +184,12 @@ const NewArrivals = () => {
         {/*scrollable products */}
         <div 
         ref={scrollRef}
-        className="container mx-auto overflow-scroll flex space-x-6 relative">
+        className={`container mx-auto overflow-scroll flex space-x-6 relative ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUpOrLeave}
+        onMouseLeave={handleMouseUpOrLeave}
+        >
             {newArrivals.map((product) => (
                 <div key={product._id} className='min-w-[100%] sm:min-w-[30%] lg:min-w-[30%] relative'>
                     <img 
