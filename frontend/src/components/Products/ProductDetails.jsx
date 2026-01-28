@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { toast } from 'sonner';
 
 const selectedProduct = {
     name : "Stylish Jacket",
@@ -36,6 +37,21 @@ const handleQuantityChange = (action) => {
     } 
 }
 
+const handleAddToCart = () => {
+    if(!selectedSize || !selectedColor) {
+        toast.error("Please select size and color before adding to cart.",{
+            duration: 1000,
+        });
+        return;
+    }
+     setIsButtonDisabled(true);
+     setTimeout(() => {
+        toast.success("Product added to cart successfully!", {
+            duration: 1000,
+        }); 
+        setIsButtonDisabled(false);
+     }, 500);
+}
   return (
     <div className='p-6'>
         <div className="max-w-6xl mx-auto bg-white p-8 rounded-lg">
@@ -138,7 +154,10 @@ const handleQuantityChange = (action) => {
                                 </button>
                             </div>
                         </div>
-                        <button className='bg-black text-white py-2 px-6 rounded w-full mb-4'>ADD TO CART</button>
+                        <button 
+                        onClick={handleAddToCart} 
+                        disabled={isButtonDisabled} 
+                        className={`bg-black text-white py-2 px-6 rounded w-full mb-4 ${isButtonDisabled ? "opacity-50 cursor-not-allowed" : "hover: bg-gray-900"}`}>{isButtonDisabled ? "Adding...." : "ADD TO CART"}</button>
 
                         <div className="mt-10 text-gray-700">
                             <h3 className='text-xl font-bold mb-4'>Characteristics: </h3>
