@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { toast } from 'sonner';
+import ProductGrid from './ProductGrid';
 
 const selectedProduct = {
     name : "Stylish Jacket",
@@ -21,6 +23,32 @@ const selectedProduct = {
     ],
 }
 
+const similarProducts = [
+    {
+        _id: 1,
+        name: "Casual Shirt",
+        price: "Rs.1500",
+        images: [{url: "https://picsum.photos/500/500?random=3"}],
+    },
+    {
+        _id: 2,
+        name: "Casual Shirt",
+        price: "Rs.1500",
+        images: [{url: "https://picsum.photos/500/500?random=4"}],
+    },
+    {
+        _id: 3,
+        name: "Casual Shirt",
+        price: "Rs.1500",
+        images: [{url: "https://picsum.photos/500/500?random=5"}],
+    },{
+        _id: 4,
+        name: "Casual Shirt",
+        price: "Rs.1500",
+        images: [{url: "https://picsum.photos/500/500?random=6"}],
+    }
+]
+
 const ProductDetails = () => {
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [selectedSize, setSelectedSize] = useState("");
@@ -36,6 +64,21 @@ const handleQuantityChange = (action) => {
     } 
 }
 
+const handleAddToCart = () => {
+    if(!selectedSize || !selectedColor) {
+        toast.error("Please select size and color before adding to cart.",{
+            duration: 1000,
+        });
+        return;
+    }
+     setIsButtonDisabled(true);
+     setTimeout(() => {
+        toast.success("Product added to cart successfully!", {
+            duration: 1000,
+        }); 
+        setIsButtonDisabled(false);
+     }, 500);
+}
   return (
     <div className='p-6'>
         <div className="max-w-6xl mx-auto bg-white p-8 rounded-lg">
@@ -138,7 +181,10 @@ const handleQuantityChange = (action) => {
                                 </button>
                             </div>
                         </div>
-                        <button className='bg-black text-white py-2 px-6 rounded w-full mb-4'>ADD TO CART</button>
+                        <button 
+                        onClick={handleAddToCart} 
+                        disabled={isButtonDisabled} 
+                        className={`bg-black text-white py-2 px-6 rounded w-full mb-4 ${isButtonDisabled ? "opacity-50 cursor-not-allowed" : "hover: bg-gray-900"}`}>{isButtonDisabled ? "Adding...." : "ADD TO CART"}</button>
 
                         <div className="mt-10 text-gray-700">
                             <h3 className='text-xl font-bold mb-4'>Characteristics: </h3>
@@ -156,6 +202,12 @@ const handleQuantityChange = (action) => {
                             </table>
                         </div>
                  </div>
+            </div>
+            <div className="mt-20">
+                <h2 className="text-2xl text-center font-medium mb-4">
+                    You may also like
+                </h2>
+                <ProductGrid products ={similarProducts} />
             </div>
         </div>
     </div>
